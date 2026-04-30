@@ -1,0 +1,57 @@
+.assistant {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  z-index: 1000;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border-glass);
+  margin-bottom: 1rem;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.header span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.content {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.inputArea input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: 4px;
+  padding: 0.6rem 1rem;
+  color: white;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.inputArea input:focus {
+  border-color: rgba(255, 255, 255, 0.3);
+}

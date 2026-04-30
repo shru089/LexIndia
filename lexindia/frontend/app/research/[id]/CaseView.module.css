@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main {
+  flex-grow: 1;
+  margin-left: 260px;
+  padding: 3rem;
+  background: #000;
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-top: 0.5rem;
+}
+
+.splitContent {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 3rem;
+}
+
+.judgmentBody {
+  background: #0a0a0a;
+  padding: 3rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-glass);
+  min-height: 80vh;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.aiSidebar {
+  height: sticky;
+  top: 3rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-self: start;
+}
+
+.aiSidebar h3 {
+  font-size: 0.8rem;
+  letter-spacing: 0.2rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-glass);
+  padding-bottom: 1rem;
+}
+
+.briefSection h4 {
+  font-size: 0.7rem;
+  letter-spacing: 0.1rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.briefSection p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-glass);
+  color: #444;
+}

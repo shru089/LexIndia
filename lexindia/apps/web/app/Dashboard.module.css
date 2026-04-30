@@ -1,0 +1,110 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main {
+  flex-grow: 1;
+  margin-left: 260px;
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.searchHero {
+  text-align: center;
+  margin-top: 10vh;
+  width: 100%;
+  max-width: 800px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  letter-spacing: 0.3rem;
+  font-size: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 3rem;
+}
+
+.searchBar {
+  display: flex;
+  padding: 0.5rem;
+  gap: 1rem;
+  border-radius: 50px;
+  transition: var(--transition-smooth);
+}
+
+.searchBar:focus-within {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.searchBar input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  padding: 1rem 2rem;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+}
+
+.searchButton {
+  background: white;
+  color: black;
+  border: none;
+  padding: 0 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.searchButton:hover {
+  background: #E5E5E5;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 6rem;
+}
+
+.statsGrid > div {
+  padding: 2rem;
+}
+
+.statsGrid h4 {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  margin-bottom: 1rem;
+}
+
+.resultsContainer {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 4rem;
+}
+
+.resultsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mb-4 { margin-bottom: 1rem; }
+.p-6 { padding: 1.5rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.text-muted { color: var(--text-muted); }
+.text-sm { font-size: 0.85rem; }

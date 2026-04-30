@@ -1,0 +1,17 @@
+{
+  "IPC_302": {
+    "bns_section": "101",
+    "title": "Punishment for murder",
+    "description": "Punishment for murder under Bharatiya Nyaya Sanhita"
+  },
+  "IPC_375": {
+    "bns_section": "63",
+    "title": "Rape",
+    "description": "Provisions regarding rape under Bharatiya Nyaya Sanhita"
+  },
+  "IPC_420": {
+    "bns_section": "318",
+    "title": "Cheating",
+    "description": "Cheating and dishonestly inducing delivery of property"
+  }
+}
