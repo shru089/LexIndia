@@ -22,3 +22,5 @@ coverage/
 Thumbs.db
 
 *.log
+
+*.tsbuildinfo
