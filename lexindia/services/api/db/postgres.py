@@ -1,14 +1,19 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from config import settings
+
+
+# Modern SQLAlchemy 2.x Base class (replaces deprecated declarative_base())
+class Base(DeclarativeBase):
+    pass
+
 
 engine = create_engine(settings.DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-Base = declarative_base()
 
 def get_db():
+    """Dependency that provides a transactional DB session."""
     db = SessionLocal()
     try:
         yield db

@@ -6,27 +6,52 @@ from routers import auth, research, documents, navigate, workflow, court, citize
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    description="LexIndia — AI-powered legal intelligence API for Indian law.",
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
-# Set all CORS enabled origins
+# ---------------------------------------------------------------------------
+# CORS
+# NOTE: In production, replace ["*"] with your exact frontend origin(s).
+# ---------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, replace with specific origins
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["auth"])
-app.include_router(research.router, prefix=f"{settings.API_V1_STR}/research", tags=["research"])
-app.include_router(documents.router, prefix=f"{settings.API_V1_STR}/documents", tags=["documents"])
-app.include_router(navigate.router, prefix=f"{settings.API_V1_STR}/navigate", tags=["navigate"])
-app.include_router(workflow.router, prefix=f"{settings.API_V1_STR}/workflow", tags=["workflow"])
-app.include_router(court.router, prefix=f"{settings.API_V1_STR}/court", tags=["court"])
+# ---------------------------------------------------------------------------
+# Routers
+# ---------------------------------------------------------------------------
+app.include_router(auth.router,       prefix=f"{settings.API_V1_STR}/auth",      tags=["auth"])
+app.include_router(research.router,   prefix=f"{settings.API_V1_STR}/research",  tags=["research"])
+app.include_router(documents.router,  prefix=f"{settings.API_V1_STR}/documents", tags=["documents"])
+app.include_router(navigate.router,   prefix=f"{settings.API_V1_STR}/navigate",  tags=["navigate"])
+app.include_router(workflow.router,   prefix=f"{settings.API_V1_STR}/workflow",  tags=["workflow"])
+app.include_router(court.router,      prefix=f"{settings.API_V1_STR}/court",     tags=["court"])
+
 if settings.CITIZEN_PORTAL_ENABLED:
     app.include_router(citizen.router, prefix=f"{settings.API_V1_STR}/citizen", tags=["citizen"])
 
-@app.get("/")
+
+# ---------------------------------------------------------------------------
+# Root & Health
+# ---------------------------------------------------------------------------
+@app.get("/", tags=["meta"])
 async def root():
-    return {"message": "Welcome to Nyaya.AI API", "status": "operational"}
+    return {
+        "name": settings.PROJECT_NAME,
+        "version": settings.VERSION,
+        "status": "operational",
+        "docs": "/docs",
+    }
+
+
+@app.get("/health", tags=["meta"])
+async def health_check():
+    """Liveness probe — returns 200 if the API process is up."""
+    return {"status": "ok"}
