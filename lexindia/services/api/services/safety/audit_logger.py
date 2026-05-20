@@ -1,15 +1,16 @@
 """
 Audit Logger: Implements immutable logging for legal compliance.
 """
-from datetime import datetime
-from db.postgres import SessionLocal
+
+from db.postgres import get_session_factory
 from models.query import AuditLog
+
 
 async def log_interaction(user_id: int, query: str, response: str, intent: str, sources: list):
     """
     Logs every query and response to the PostgreSQL database for a 2-year retention period.
     """
-    db = SessionLocal()
+    db = get_session_factory()()
     try:
         log_entry = AuditLog(
             user_id=user_id,

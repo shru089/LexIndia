@@ -1,5 +1,7 @@
 'use client';
-import React, { useState, useRef, useEffect } from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
+
 import styles from './AIAssistant.module.css';
 
 type Message = {
@@ -7,18 +9,66 @@ type Message = {
   text: string;
 };
 
+type AnalysisResponse = {
+  analysis?: {
+    headline?: string;
+    summary?: string;
+    risk_level?: string;
+    recommended_actions?: string[];
+    authorities?: Array<{ title?: string; source?: string }>;
+    disclaimer?: string;
+  };
+};
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
+
+const STARTER_MESSAGE =
+  'Ask for a legal briefing, a workflow recommendation, or a statute translation and I will return a structured research note.';
+
+const formatAssistantReply = (payload: AnalysisResponse) => {
+  const analysis = payload.analysis;
+  if (!analysis) {
+    return 'A structured analysis is not available right now. Please try again.';
+  }
+
+  const lines = [
+    analysis.headline ?? 'Structured legal information brief',
+    '',
+    analysis.summary ?? 'No summary was returned.',
+    '',
+    `Risk level: ${analysis.risk_level ?? 'Moderate'}`,
+  ];
+
+  if (analysis.recommended_actions?.length) {
+    lines.push('', 'Recommended actions:');
+    analysis.recommended_actions.forEach((action) => {
+      lines.push(`- ${action}`);
+    });
+  }
+
+  if (analysis.authorities?.length) {
+    lines.push('', 'Authorities:');
+    analysis.authorities.forEach((authority) => {
+      lines.push(`- ${authority.title ?? 'Authority'} (${authority.source ?? 'research'})`);
+    });
+  }
+
+  if (analysis.disclaimer) {
+    lines.push('', analysis.disclaimer);
+  }
+
+  return lines.join('\n');
+};
 
 const AIAssistant = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', text: 'Welcome, Counsel. How can I assist with your research today?' },
+    { role: 'assistant', text: STARTER_MESSAGE },
   ]);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to latest message
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -27,28 +77,33 @@ const AIAssistant = () => {
     const trimmed = input.trim();
     if (!trimmed || loading) return;
 
-    const userMsg: Message = { role: 'user', text: trimmed };
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((previous) => [...previous, { role: 'user', text: trimmed }]);
     setInput('');
     setLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_BASE_URL}/api/v1/research/analyze?scenario=${encodeURIComponent(trimmed)}`,
-        { method: 'POST' }
-      );
-      if (!res.ok) throw new Error('API error');
-      const data = await res.json();
-      setMessages((prev) => [
-        ...prev,
-        { role: 'assistant', text: data.analysis ?? 'Analysis complete.' },
+      const response = await fetch(`${API_BASE_URL}/api/v1/research/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scenario: trimmed }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error ${response.status}`);
+      }
+
+      const data = (await response.json()) as AnalysisResponse;
+      setMessages((previous) => [
+        ...previous,
+        { role: 'assistant', text: formatAssistantReply(data) },
       ]);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
+    } catch (assistantError) {
+      console.error('Assistant request failed:', assistantError);
+      setMessages((previous) => [
+        ...previous,
         {
           role: 'assistant',
-          text: 'I am currently offline. Please ensure the API service is running.',
+          text: 'The assistant could not reach the API. Verify the backend is running and try again.',
         },
       ]);
     } finally {
@@ -56,8 +111,10 @@ const AIAssistant = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') handleSubmit();
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      void handleSubmit();
+    }
   };
 
   if (!isOpen) {
@@ -65,8 +122,8 @@ const AIAssistant = () => {
       <button
         className={styles.toggleButton}
         onClick={() => setIsOpen(true)}
-        aria-label="Open AI Research Associate"
-        title="Open AI Assistant"
+        aria-label="Open LexIndia research assistant"
+        title="Open LexIndia research assistant"
       >
         AI
       </button>
@@ -74,55 +131,57 @@ const AIAssistant = () => {
   }
 
   return (
-    <div className={`${styles.assistant} glass`} role="complementary" aria-label="AI Research Associate">
+    <div className={`${styles.assistant} glass`} role="complementary" aria-label="LexIndia research assistant">
       <div className={styles.header}>
         <div className={styles.indicator} aria-hidden="true" />
-        <span>AI Research Associate</span>
+        <span>Research assistant</span>
         <button
           className={styles.closeButton}
           onClick={() => setIsOpen(false)}
-          aria-label="Close AI Assistant"
+          aria-label="Close research assistant"
         >
-          ×
+          x
         </button>
       </div>
 
       <div className={styles.messageList} aria-live="polite">
-        {messages.map((msg, i) => (
+        {messages.map((message, index) => (
           <div
-            key={i}
-            className={msg.role === 'user' ? styles.userMessage : styles.assistantMessage}
+            key={`${message.role}-${index}`}
+            className={message.role === 'user' ? styles.userMessage : styles.assistantMessage}
           >
-            {msg.text}
+            {message.text}
           </div>
         ))}
-        {loading && (
+
+        {loading ? (
           <div className={styles.assistantMessage}>
             <span className={styles.typingDot} />
             <span className={styles.typingDot} />
             <span className={styles.typingDot} />
           </div>
-        )}
+        ) : null}
+
         <div ref={bottomRef} />
       </div>
 
       <div className={styles.inputArea}>
         <input
           type="text"
-          placeholder="Ask LexIndia..."
+          placeholder="Ask for a legal briefing..."
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(event) => setInput(event.target.value)}
           onKeyDown={handleKeyDown}
           disabled={loading}
-          aria-label="Message input"
+          aria-label="Assistant message input"
         />
         <button
           className={styles.sendButton}
-          onClick={handleSubmit}
+          onClick={() => void handleSubmit()}
           disabled={loading || !input.trim()}
           aria-label="Send message"
         >
-          ↑
+          Send
         </button>
       </div>
     </div>

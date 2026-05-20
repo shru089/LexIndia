@@ -1,46 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap');
 
-/* ============================================================
-   Design Tokens
-   ============================================================ */
 :root {
-  --bg-main: #050505;
-  --bg-surface: rgba(26, 26, 26, 0.6);
-  --border-glass: rgba(255, 255, 255, 0.1);
-  --text-primary: #F7F7F7;
-  --text-muted: #888888;
-  --accent-glow: rgba(255, 255, 255, 0.05);
-  --glass-blur: blur(20px);
-  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Cormorant Garamond', serif;
+  --bg-main: #f3ede2;
+  --bg-surface: rgba(255, 252, 247, 0.78);
+  --bg-elevated: rgba(255, 255, 255, 0.82);
+  --ink-strong: #1e241f;
+  --text-secondary: #47534b;
+  --text-muted: #6e7a72;
+  --border-strong: rgba(36, 61, 44, 0.14);
+  --accent: #1a5736;
+  --accent-soft: rgba(26, 87, 54, 0.1);
+  --shadow-soft: 0 22px 48px rgba(88, 73, 46, 0.12);
 }
 
-/* ============================================================
-   Reset
-   ============================================================ */
 *,
 *::before,
 *::after {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background-color: var(--bg-main);
-  color: var(--text-primary);
-  font-family: 'Outfit', sans-serif;
-  overflow-x: hidden;
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(188, 137, 77, 0.18), transparent 24%),
+    radial-gradient(circle at 85% 18%, rgba(26, 87, 54, 0.12), transparent 22%),
+    linear-gradient(180deg, #f7f2e7 0%, #efe6d7 100%);
+  color: var(--ink-strong);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(36, 61, 44, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(36, 61, 44, 0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(circle at center, black, transparent 85%);
 }
 
 a {
@@ -48,92 +55,38 @@ a {
   text-decoration: none;
 }
 
-button {
-  font-family: inherit;
+button,
+input {
+  font: inherit;
 }
 
-/* ============================================================
-   Glassmorphism Utilities
-   ============================================================ */
 .glass {
   background: var(--bg-surface);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-md);
+  backdrop-filter: blur(18px);
 }
 
 .glass-card {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-md);
-  transition: var(--transition-smooth);
+  background: var(--bg-elevated);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-soft);
 }
 
-.glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.03);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+:focus-visible {
+  outline: 2px solid rgba(26, 87, 54, 0.35);
+  outline-offset: 2px;
 }
 
-/* ============================================================
-   Typography Utilities
-   ============================================================ */
-.legal-text {
-  font-family: 'Source Serif 4', serif;
-  line-height: 1.8;
-  font-size: 1.1rem;
-}
-
-.text-muted {
-  color: var(--text-muted);
-}
-
-.text-sm {
-  font-size: 0.85rem;
-}
-
-/* ============================================================
-   Spacing Utilities (used by dashboard result cards)
-   ============================================================ */
-.mb-1 { margin-bottom: 0.25rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-4 { margin-bottom: 1rem; }
-.mt-4 { margin-top: 1rem; }
-.p-6  { padding: 1.5rem; }
-
-/* ============================================================
-   Scrollbar Styling
-   ============================================================ */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(36, 61, 44, 0.18);
 }
 
 ::-webkit-scrollbar-track {
   background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
-}
-
-/* ============================================================
-   Focus-visible global default (keyboard nav)
-   ============================================================ */
-:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.4);
-  outline-offset: 2px;
 }

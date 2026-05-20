@@ -1,19 +1,19 @@
-import '../styles/globals.css'
-import type { Metadata } from 'next'
+import '../styles/globals.css';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'LexIndia — Legal Intelligence',
-  description: 'Elite legal research and quantitative analysis',
-}
+  title: 'LexIndia | Public Sector Legal Intelligence',
+  description: 'Research, document intelligence, and workflow coordination for Indian legal teams.',
+};
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
       <body>{children}</body>
     </html>
-  )
+  );
 }

@@ -40,4 +40,7 @@ class SearchClient:
             )
         return normalized_results
 
+    async def close(self) -> None:
+        await self.client.close()
+
 search_client = SearchClient()

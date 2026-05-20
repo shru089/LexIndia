@@ -1,214 +1,374 @@
-.container {
-  display: flex;
+.shell {
   min-height: 100vh;
 }
 
 .main {
-  flex-grow: 1;
-  margin-left: 260px;
-  padding: 4rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-left: 320px;
+  padding: 3rem 3rem 5rem;
 }
 
-/* ============================================================
-   Search Hero
-   ============================================================ */
-.searchHero {
-  text-align: center;
-  margin-top: 10vh;
-  width: 100%;
-  max-width: 800px;
+.hero {
+  display: grid;
+  gap: 1.5rem;
+  padding: 2.5rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at top right, rgba(188, 137, 77, 0.15), transparent 30%),
+    linear-gradient(135deg, rgba(255, 250, 240, 0.94), rgba(250, 245, 235, 0.85));
+  box-shadow: var(--shadow-soft);
 }
 
-.subtitle {
+.heroCopy {
+  max-width: 52rem;
+}
+
+.eyebrow,
+.sectionKicker {
   color: var(--text-muted);
-  letter-spacing: 0.3rem;
-  font-size: 0.7rem;
-  margin-bottom: 1rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
-.title {
-  font-size: 2.5rem;
-  font-weight: 400;
-  margin-bottom: 3rem;
+.heroTitle {
+  margin-top: 0.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  line-height: 0.98;
+  color: var(--ink-strong);
 }
 
-/* ============================================================
-   Search Bar
-   ============================================================ */
-.searchBar {
+.heroSummary {
+  margin-top: 1rem;
+  max-width: 46rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.signalRow {
   display: flex;
-  padding: 0.5rem;
-  gap: 0.75rem;
-  border-radius: 50px;
-  transition: var(--transition-smooth);
+  flex-wrap: wrap;
+  gap: 0.85rem;
 }
 
-.searchBar:focus-within {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
+.signalPill {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(36, 61, 44, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--ink-strong);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.searchSection,
+.metricGrid,
+.workspace {
+  margin-top: 2rem;
+}
+
+.searchPanel,
+.panel,
+.metricCard {
+  border-radius: 1.75rem;
+}
+
+.searchPanel {
+  padding: 2rem;
+}
+
+.searchHeading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.searchHeading h2,
+.panelHeader h2 {
+  margin-top: 0.4rem;
+  font-size: 1.5rem;
+  color: var(--ink-strong);
+}
+
+.searchSupport,
+.panelMeta,
+.metricDetail,
+.stackMeta,
+.resultMetaRow,
+.resultSummary,
+.errorText,
+.emptyState p,
+.stackCard p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.searchBar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .searchBar input {
-  flex-grow: 1;
-  background: transparent;
-  border: none;
-  padding: 1rem 1.5rem;
-  color: white;
+  min-width: 0;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--ink-strong);
   font-size: 1rem;
-  font-family: inherit;
-  outline: none;
 }
 
 .searchBar input::placeholder {
   color: var(--text-muted);
 }
 
-.searchButton {
-  background: white;
-  color: black;
+.searchBar input:focus {
+  outline: none;
+  border-color: rgba(26, 87, 54, 0.45);
+  box-shadow: 0 0 0 4px rgba(26, 87, 54, 0.1);
+}
+
+.searchButton,
+.clearButton,
+.quickQuery {
   border: none;
-  padding: 0 2rem;
-  border-radius: 50px;
-  font-weight: 600;
-  font-family: inherit;
-  font-size: 0.8rem;
-  letter-spacing: 0.05rem;
   cursor: pointer;
-  transition: var(--transition-smooth);
-  white-space: nowrap;
-  min-width: 90px;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+  font-family: inherit;
 }
 
-.searchButton:hover:not(:disabled) {
-  background: #e5e5e5;
-  transform: scale(1.02);
+.searchButton {
+  padding: 0 1.3rem;
+  border-radius: 1rem;
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 14px 24px rgba(26, 87, 54, 0.2);
 }
 
-.searchButton:disabled {
-  opacity: 0.7;
-  cursor: default;
+.clearButton {
+  padding: 0 1.1rem;
+  border-radius: 1rem;
+  background: rgba(36, 61, 44, 0.08);
+  color: var(--ink-strong);
+  font-weight: 600;
 }
 
-/* ============================================================
-   Loading Spinner
-   ============================================================ */
-.spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(0, 0, 0, 0.2);
-  border-top-color: black;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
+.searchButton:hover:not(:disabled),
+.clearButton:hover:not(:disabled),
+.quickQuery:hover:not(:disabled) {
+  transform: translateY(-1px);
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.searchButton:disabled,
+.clearButton:disabled,
+.quickQuery:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-/* ============================================================
-   Results
-   ============================================================ */
-.resultsContainer {
-  width: 100%;
-  max-width: 800px;
-  margin-top: 4rem;
-}
-
-.resultsList {
+.quickQueryRow {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
-.noResults {
-  text-align: center;
-  margin-top: 2rem;
+.quickQuery {
+  padding: 0.7rem 0.95rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--ink-strong);
+  font-size: 0.88rem;
+  font-weight: 600;
 }
 
-.resultHeader {
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.metricCard {
+  padding: 1.4rem;
+}
+
+.metricLabel {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.metricValue {
+  margin-top: 0.65rem;
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: 2rem;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.9fr);
+  gap: 1.25rem;
+}
+
+.primaryColumn,
+.secondaryColumn {
+  min-width: 0;
+}
+
+.panel {
+  padding: 1.6rem;
+}
+
+.panel + .panel {
+  margin-top: 1.25rem;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.15rem;
+}
+
+.resultsList,
+.stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.resultCard,
+.stackCard {
+  padding: 1.1rem 1.15rem;
+  border: 1px solid rgba(36, 61, 44, 0.12);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.resultTop,
+.stackRow {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.5rem;
-}
-
-.resultTitle {
-  font-size: 1rem;
-  font-weight: 600;
+  gap: 1rem;
+  align-items: start;
 }
 
 .resultSource {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.resultTitle,
+.stackCard h3 {
+  margin-top: 0.3rem;
+  color: var(--ink-strong);
+  font-size: 1.05rem;
+}
+
+.resultCourt,
+.stageBadge {
   flex-shrink: 0;
-  margin-left: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05rem;
-  font-size: 0.65rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(26, 87, 54, 0.09);
+  color: var(--ink-strong);
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
-.resultCitation {
-  font-style: italic;
+.resultSummary {
+  margin-top: 0.8rem;
 }
 
-.errorText {
-  color: var(--text-muted);
+.resultMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.8rem;
   font-size: 0.88rem;
-  text-align: center;
-  padding: 1rem;
-  border: 1px solid var(--border-glass);
-  border-radius: 8px;
-  background: rgba(255, 80, 80, 0.04);
 }
 
-/* ============================================================
-   Stats Grid (empty state)
-   ============================================================ */
-.statsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  width: 100%;
-  max-width: 800px;
-  margin-top: 6rem;
+.actionBlock {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(36, 61, 44, 0.1);
 }
 
-.statsGrid > div {
-  padding: 2rem;
-}
-
-.statsGrid h4 {
-  color: var(--text-muted);
-  font-size: 0.7rem;
+.actionHeading {
+  color: var(--ink-strong);
+  font-size: 0.84rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12rem;
-  margin-bottom: 0.75rem;
+  letter-spacing: 0.08em;
 }
 
-/* ============================================================
-   Responsive — Tablet / Mobile
-   ============================================================ */
-@media (max-width: 768px) {
+.actionList {
+  margin: 0.7rem 0 0;
+  padding-left: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.stackMeta {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.errorText,
+.emptyState {
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(188, 137, 77, 0.16);
+  border-radius: 1rem;
+  background: rgba(255, 250, 240, 0.68);
+}
+
+.emptyState h3 {
+  color: var(--ink-strong);
+}
+
+@media (max-width: 1180px) {
   .main {
     margin-left: 0;
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1.25rem 4rem;
   }
 
-  .searchHero {
-    margin-top: 6vh;
-  }
-
-  .title {
-    font-size: 1.75rem;
-  }
-
-  .statsGrid {
+  .metricGrid,
+  .workspace,
+  .searchHeading,
+  .searchBar {
     grid-template-columns: 1fr;
-    margin-top: 3rem;
-    gap: 1.25rem;
+  }
+
+  .panelHeader {
+    align-items: start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding: 1.5rem;
+  }
+
+  .searchPanel,
+  .panel,
+  .metricCard {
+    padding: 1.2rem;
+  }
+
+  .resultTop,
+  .stackRow {
+    flex-direction: column;
   }
 }

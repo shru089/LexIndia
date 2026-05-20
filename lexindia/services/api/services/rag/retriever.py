@@ -1,6 +1,9 @@
 from typing import Dict, List
+
 from db.vector import vector_db
 from db.search import search_client
+from services.demo_content import search_demo_corpus
+from services.legal_repository import search_live_legal_data
 
 class HybridRetriever:
     """
@@ -20,8 +23,15 @@ class HybridRetriever:
         # 3. Reciprocal Rank Fusion (RRF) 
         # Merges both streams to surface the best 'Truth'
         merged_results = self._rank_fusion(keyword_results, vector_results)
-        
-        return merged_results[:limit]
+
+        if merged_results:
+            return merged_results[:limit]
+
+        database_results = search_live_legal_data(query, limit=limit)
+        if database_results:
+            return database_results[:limit]
+
+        return search_demo_corpus(query, limit=limit)
 
     def _rank_fusion(self, keyword_list, vector_list):
         combined_scores = {}

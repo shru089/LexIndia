@@ -1,6 +1,8 @@
+from typing import Optional
+
 import httpx
+
 from config import settings
-from typing import List, Dict, Optional
 
 class LLMService:
     """
@@ -12,6 +14,15 @@ class LLMService:
         self.ollama_url = f"{settings.OLLAMA_BASE_URL}/api/generate"
         self.groq_url = "https://api.groq.com/openai/v1/chat/completions"
         self.gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+
+    def can_attempt_generation(self) -> bool:
+        if self.provider == "ollama":
+            return True
+        if self.provider == "groq":
+            return bool(settings.GROQ_API_KEY)
+        if self.provider == "gemini":
+            return bool(settings.GEMINI_API_KEY)
+        return False
 
     async def generate_text(self, prompt: str, system_prompt: Optional[str] = None) -> str:
         if self.provider == "ollama":
@@ -27,7 +38,7 @@ class LLMService:
         """Legacy method name, now aliases to generate_text"""
         return await self.generate_text(prompt, system_prompt)
 
-    async def _call_gemini(self, prompt: str, system_prompt: str) -> str:
+    async def _call_gemini(self, prompt: str, system_prompt: Optional[str]) -> str:
         if not settings.GEMINI_API_KEY:
             return "Error: Gemini API Key not configured"
             
@@ -45,7 +56,7 @@ class LLMService:
             except Exception as e:
                 return f"Error connecting to Gemini: {str(e)}"
 
-    async def _call_ollama(self, prompt: str, system_prompt: str) -> str:
+    async def _call_ollama(self, prompt: str, system_prompt: Optional[str]) -> str:
         payload = {
             "model": "llama3",
             "prompt": prompt,
@@ -59,7 +70,7 @@ class LLMService:
             except Exception as e:
                 return f"Error connecting to local Ollama: {str(e)}"
 
-    async def _call_groq(self, prompt: str, system_prompt: str) -> str:
+    async def _call_groq(self, prompt: str, system_prompt: Optional[str]) -> str:
         if not settings.GROQ_API_KEY:
             return "Error: Groq API Key not configured"
             
@@ -67,7 +78,7 @@ class LLMService:
         payload = {
             "model": "llama3-70b-8192",
             "messages": [
-                {"role": "system", "content": system_prompt},
+                {"role": "system", "content": system_prompt or "You are a legal research assistant."},
                 {"role": "user", "content": prompt}
             ]
         }

@@ -35,4 +35,9 @@ class VectorDBClient:
             )
         return normalized_results
 
+    async def close(self) -> None:
+        close_method = getattr(self.client, "close", None)
+        if callable(close_method):
+            close_method()
+
 vector_db = VectorDBClient()
