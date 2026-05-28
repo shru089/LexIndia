@@ -1,41 +1,68 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
+# -----------------------------------------------------------------------------
+# Frontend dependencies and package manager state
+# -----------------------------------------------------------------------------
+node_modules/
+.pnp
 .pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+.npm/
 
-# testing
-/coverage
+# -----------------------------------------------------------------------------
+# Next.js build output and caches
+# -----------------------------------------------------------------------------
+.next/
+out/
+build/
+.turbo/
 
-# next.js
-/.next/
-/out/
+# -----------------------------------------------------------------------------
+# Local environment files
+# Keep the template in version control, but never commit working env files.
+# -----------------------------------------------------------------------------
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
 
-# production
-/build
+# -----------------------------------------------------------------------------
+# Deployment and local tooling
+# -----------------------------------------------------------------------------
+.vercel/
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# -----------------------------------------------------------------------------
+# Logs and local debug artifacts
+# -----------------------------------------------------------------------------
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
+api-start.log
+api-start.err.log
+web-start.log
+web-start.err.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# -----------------------------------------------------------------------------
+# Editor / OS noise
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+.idea/
+.vscode/
 
-# vercel
-.vercel
+# -----------------------------------------------------------------------------
+# Mixed local runtime files currently present in this workspace
+# -----------------------------------------------------------------------------
+venv/
+__pycache__/
+*.pyc
+*.pyo
 
-# typescript
+# -----------------------------------------------------------------------------
+# TypeScript / generated metadata
+# -----------------------------------------------------------------------------
 *.tsbuildinfo
 next-env.d.ts
