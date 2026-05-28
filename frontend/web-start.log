@@ -1,0 +1,16 @@
+
+> lexindia-frontend@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+- Environments: .env.local
+✓ Ready in 4.8s
+Creating turbopack project {
+  dir: 'C:\\Users\\admini\\Desktop\\LexIndia\\lexindia\\apps\\web',
+  testMode: true
+}
+
+ GET / 200 in 2.7s (next.js: 1387ms, application-code: 1288ms)
+ GET / 200 in 308ms (next.js: 15ms, application-code: 293ms)

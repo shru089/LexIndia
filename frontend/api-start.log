@@ -1,0 +1,18 @@
+INFO:     127.0.0.1:59442 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62546 - "GET /api/v1/research/briefing HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59214 - "OPTIONS /api/v1/research/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59214 - "POST /api/v1/research/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59635 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56996 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56996 - "GET /api/v1/openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63027 - "POST /api/debug/seed-data?reset=true HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63027 - "POST /api/v1/debug/seed-data?reset=true HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63027 - "POST /api/seed-data?reset=true HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63518 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63518 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63518 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53283 - "POST /debug/seed-data?reset=true HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62307 - "GET /openapi.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59930 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59930 - "GET /api/v1/openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59230 - "GET /static/images/covers/mahabharata_ch1_cover_1768400641463.png HTTP/1.1" 404 Not Found
