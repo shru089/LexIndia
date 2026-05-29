@@ -1,5 +1,6 @@
 from database import SessionLocal, engine
 import models
+import auth_utils
 
 # Recreate tables with the new schema columns
 models.Base.metadata.create_all(bind=engine)
@@ -100,6 +101,21 @@ try:
             existing.summary_ratio = c.summary_ratio
             existing.amended_recently = c.amended_recently
             existing.full_text = c.full_text
+
+    # Seed mock users with hashed passwords
+    mock_users = [
+        models.User(username="free_user", hashed_password=auth_utils.hash_password("password123"), tier="free"),
+        models.User(username="pro_user", hashed_password=auth_utils.hash_password("password123"), tier="citizen_pro"),
+        models.User(username="advocate_user", hashed_password=auth_utils.hash_password("password123"), tier="advocate")
+    ]
+
+    for u in mock_users:
+        existing_user = db.query(models.User).filter_by(username=u.username).first()
+        if not existing_user:
+            db.add(u)
+        else:
+            existing_user.hashed_password = u.hashed_password
+            existing_user.tier = u.tier
 
     db.commit()
     print("Database seeded successfully!")

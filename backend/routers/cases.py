@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from database import SessionLocal
 import models
 from typing import Optional, List
 from pydantic import BaseModel
+from rate_limiter import check_rate_limit
 
 router = APIRouter()
 
@@ -52,18 +53,14 @@ def get_cases(
     outcome: Optional[str] = None,
     act: Optional[str] = None,
     amended_recently: Optional[bool] = None,
-    page: int = 1,
-    page_size: int = 10,
+    page: int = Query(1, ge=1),
+    page_size: int = Query(10, ge=1, le=100),
+    current_user: models.User = Depends(check_rate_limit),
     db: Session = Depends(get_db)
 ):
     try:
-        # Enforce minimum bounds
-        if page < 1:
-            page = 1
-        if page_size < 1:
-            page_size = 10
-
         query = db.query(models.Case)
+
         if q:
             # Search across title, key_parties, or acts_cited
             query = query.filter(

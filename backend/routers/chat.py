@@ -1,12 +1,17 @@
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException, Depends
+from pydantic import BaseModel, Field
 import asyncio
 import re
+import os
+import httpx
+import json
+from rate_limiter import check_rate_limit
+import models
 
 router = APIRouter()
 
 class ChatRequest(BaseModel):
-    message: str
+    message: str = Field(..., min_length=5, max_length=1000)
 
 class ChatResponse(BaseModel):
     response: str
@@ -14,6 +19,10 @@ class ChatResponse(BaseModel):
     applicableSections: list
     nextSteps: list
     disclaimer: str
+
+# Retrieve Ollama configurations
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3")
 
 def analyze_message(msg: str):
     msg_lower = msg.lower()
@@ -146,16 +155,59 @@ def analyze_message(msg: str):
         "disclaimer": disclaimer
     }
 
+async def query_ollama(prompt: str) -> dict:
+    url = f"{OLLAMA_HOST}/api/generate"
+    system_prompt = (
+        "You are Lex India, a source-backed legal assistant for Indian Law. "
+        "Analyze the user query. Classify severity (e.g. 'Criminal / Bailable', 'Civil Dispute', 'Cognizable / Non-bailable'). "
+        "Identify applicable acts and sections (e.g. 'Negotiable Instruments Act, 1881 (Section 138)'). "
+        "List 2-3 practical next steps. "
+        "Format your answer as a JSON object with these EXACT keys: "
+        "'response' (a 2-3 sentence plain-language explanation), "
+        "'severity' (the severity classification string), "
+        "'applicableSections' (a JSON array of applicable sections/acts), "
+        "'nextSteps' (a JSON array of next step strings). "
+        "Do not include any Markdown wrapper like ```json or anything else. Output raw JSON only."
+    )
+    
+    full_prompt = f"System: {system_prompt}\nUser: {prompt}\nJSON Output:"
+    
+    async with httpx.AsyncClient(timeout=8.0) as client:
+        res = await client.post(
+            url,
+            json={"model": OLLAMA_MODEL, "prompt": full_prompt, "stream": False}
+        )
+        res.raise_for_status()
+        res_json = res.json()
+        raw_text = res_json.get("response", "").strip()
+        
+        # Clean potential markdown wrappers
+        if raw_text.startswith("```"):
+            raw_text = re.sub(r"^```(?:json)?\n|\n```$", "", raw_text, flags=re.M)
+            
+        data = json.loads(raw_text.strip())
+        return {
+            "response": data["response"],
+            "severity": data["severity"],
+            "applicableSections": data["applicableSections"],
+            "nextSteps": data["nextSteps"],
+            "disclaimer": "This is an AI-generated response from local Ollama. For actual legal advice, consult a lawyer."
+        }
+
 @router.post("/", response_model=ChatResponse)
-async def chat_with_ai(request: ChatRequest):
+async def chat_with_ai(
+    request: ChatRequest,
+    current_user: models.User = Depends(check_rate_limit)
+):
     try:
-        if not request.message or not request.message.strip():
-            raise HTTPException(status_code=400, detail="Message cannot be empty")
-        
-        await asyncio.sleep(1.0)
-        
-        analysis = analyze_message(request.message)
-        
+        # Try Ollama connection
+        try:
+            analysis = await query_ollama(request.message)
+        except Exception as e:
+            # Fallback to local rule-based parser on connection refusal/invalid format
+            analysis = analyze_message(request.message)
+            analysis["disclaimer"] += " (Ollama offline; resolved via rule-based fallback)"
+            
         return ChatResponse(
             response=analysis["response"],
             severity=analysis["severity"],
@@ -167,4 +219,5 @@ async def chat_with_ai(request: ChatRequest):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Chat processing error: {str(e)}")
+
 
