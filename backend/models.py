@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, Boolean
 from database import Base
 
 class Case(Base):
@@ -9,4 +9,16 @@ class Case(Base):
     year = Column(Integer)
     court = Column(String)
     citation = Column(String)
+    case_number = Column(String, index=True, nullable=True)
+    bench = Column(String, nullable=True)
+    date = Column(String, nullable=True)
+    acts_cited = Column(String, nullable=True)  # Comma-separated list of acts
+    sections_cited = Column(String, nullable=True)  # Comma-separated list of sections
+    outcome = Column(String, index=True, nullable=True)
+    key_parties = Column(String, nullable=True)
+    summary_facts = Column(Text, nullable=True)
+    summary_held = Column(Text, nullable=True)
+    summary_ratio = Column(Text, nullable=True)
+    amended_recently = Column(Boolean, default=False)
     full_text = Column(Text, nullable=True)
+
