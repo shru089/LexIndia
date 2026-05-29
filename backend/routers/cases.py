@@ -25,8 +25,17 @@ class CaseResponse(BaseModel):
     summary_ratio: Optional[str] = None
     amended_recently: bool
 
+class PaginationMetadata(BaseModel):
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
+    has_next: bool
+    has_prev: bool
+
 class CasesResponse(BaseModel):
     results: List[CaseResponse]
+    pagination: PaginationMetadata
 
 def get_db():
     db = SessionLocal()
@@ -43,9 +52,17 @@ def get_cases(
     outcome: Optional[str] = None,
     act: Optional[str] = None,
     amended_recently: Optional[bool] = None,
+    page: int = 1,
+    page_size: int = 10,
     db: Session = Depends(get_db)
 ):
     try:
+        # Enforce minimum bounds
+        if page < 1:
+            page = 1
+        if page_size < 1:
+            page_size = 10
+
         query = db.query(models.Case)
         if q:
             # Search across title, key_parties, or acts_cited
@@ -65,7 +82,17 @@ def get_cases(
         if amended_recently is not None:
             query = query.filter(models.Case.amended_recently == amended_recently)
 
-        cases = query.all()
+        # Count total matches before pagination limit
+        total_count = query.count()
+
+        # Apply offset and limit
+        offset = (page - 1) * page_size
+        cases = query.offset(offset).limit(page_size).all()
+
+        import math
+        total_pages = math.ceil(total_count / page_size) if total_count > 0 else 0
+        has_next = page < total_pages
+        has_prev = page > 1
 
         results = [
             {
@@ -87,7 +114,19 @@ def get_cases(
                 "amended_recently": c.amended_recently
             } for c in cases
         ]
-        return {"results": results}
+        
+        return {
+            "results": results,
+            "pagination": {
+                "total": total_count,
+                "page": page,
+                "page_size": page_size,
+                "total_pages": total_pages,
+                "has_next": has_next,
+                "has_prev": has_prev
+            }
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
 
